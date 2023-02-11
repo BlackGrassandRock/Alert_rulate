@@ -4,3 +4,4 @@ TIMEZONE_COMMON_NAME = 'Kiev'
 DB_USER = "root"
 DB_PASS = "1S92837asha."
 DB_BASE = "rulate_bot"
+DEVELOPER = 't.me/Dyagilev_Olexandr'

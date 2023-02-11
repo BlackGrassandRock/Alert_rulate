@@ -1,18 +1,13 @@
 import telebot
-import json
-import traceback
 import pytz
 
-import datetime
+from src.tlrulate_validator import *
+from src.tlrulate_config import * #secure data
+from src.tlrulate_selenium import parser
+from src.tlrulate_database import *
 
-import tlrulate_request
-import tlrulate_config
-import tlrulate_validator as tl_vl
-import tlrulate_selenium
 
-P_TIMEZONE = pytz.timezone(tlrulate_config.TIMEZONE)
-TIMEZONE_COMMON_NAME = tlrulate_config.TIMEZONE_COMMON_NAME
-bot = telebot.TeleBot(tlrulate_config.TOKEN)
+users_dt = []
 
 @bot.message_handler(commands=['start'])
 def start_command(message):
@@ -26,11 +21,11 @@ def start_command(message):
   )
 
 @bot.message_handler(commands=['write'])
-def write_command(message):
+def write_to_develop(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.add(
         telebot.types.InlineKeyboardButton(
-            'Написать разрабу', url='t.me/Dyagilev_Olexandr'
+            'Написать разрабу', url= DEVELOPER
   )
     )
     bot.send_message(
@@ -58,32 +53,24 @@ def login_command(message):
         "Введи свой логин от сайта  https://tl.rulate.ru/")
     bot.register_next_step_handler(message, add_user)
 
-def password_command(message):
-    bot.send_message(
-        message.chat.id,
-        "Отлично. А теперь, введи пароль от сайта  https://tl.rulate.ru/")
-    bot.register_next_step_handler(message, user_password)
-
 #accepting login from the user
 def add_user(message):
-    if tl_vl.valid_log(message.text) == tl_vl.request_status[6]:
-        tlrulate_request.request_status_mess_6(message) #вызов ошибки №6
+    users_dt = [message.chat.id, str(message.text)]
+    if valid_log(message.text, users_dt[0]) == False:
         login_command(message)
     else:
-        global login
-        login = str(message.text)
-        password_command(message)
+        bot.send_message(
+            message.chat.id,
+            "Отлично. А теперь, введи пароль от сайта  https://tl.rulate.ru/")
+        bot.register_next_step_handler(message, user_password, users_dt)
 
 #accepting password
-def user_password(message):
-    if tl_vl.valid_pas(message.text) == tl_vl.request_status[7]:
-        tlrulate_request.request_status_mess_7(message)
-        password_command(message)
-    else:
-        password = str(message.text)
-        users_dt = [message.chat.id, login, password, "1"]
-        print(users_dt)
+def user_password(message, users_dt):
+    if valid_pass(message.text, users_dt[0]) == True:
+        users_dt += [str(message.text), "1"]
+        users_dt = parser(users_dt)
+        if users_dt != None:
+            cheker(users_dt)
 
-        tlrulate_selenium.parser(users_dt)
 
-bot.polling(none_stop=True)
+bot.polling(none_stop=True) #bot starter from tlrulate_telegram_bot.py

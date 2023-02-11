@@ -1,64 +1,62 @@
 import telebot
-import pytz
-import json
-import traceback
 
-import datetime
+from src.tlrulate_config import *
 
-import tlrulate_validator as tl_vl
-import tlrulate_config
-
-P_TIMEZONE = pytz.timezone(tlrulate_config.TIMEZONE)
-TIMEZONE_COMMON_NAME = tlrulate_config.TIMEZONE_COMMON_NAME
-bot = telebot.TeleBot(tlrulate_config.TOKEN)
+P_TIMEZONE = TIMEZONE
+TIMEZONE_COMMON_NAME = TIMEZONE_COMMON_NAME
+bot = telebot.TeleBot(TOKEN)
 
 #Sending an error message to the user
-def request_status_mess_2(message, id):
+def request_status_mess_2(id):
     bot.send_message(
         id,
-        tl_vl.request_status[2]
+        "Упс. Что-то случилось с сайтом. Попробуем достучатся до него позднее. А пока, можешь написать о проблеме разрабу /write "
         )
 
-def request_status_mess_3(message):
+def request_status_mess_3(id):
     bot.send_message(
         id,
-        tl_vl.request_status[3]
+        "В  последднее время на этот акаунт пытались зайти слишком много раз. Включилась блокировка. Придётся подождать пока она не снимется. А пока, можешь написать о проблеме разрабу /write"
         )
 
-def request_status_mess_4(message):
+def request_status_mess_4(id):
     bot.send_message(
         id,
-        tl_vl.request_status[4]
+        "Неправильно указан логин или пароль."
         )
 
-def request_status_mess_5(message):
+def request_status_mess_5(id):
     bot.send_message(
         id,
-        tl_vl.request_status[5]
+        "Что-то с парсером не так."
         )
 
-def request_status_mess_6(message):
+def request_status_mess_6(id):
     bot.send_message(
         id,
-        tl_vl.request_status[6]
+        "Такого логина быть не может. Попробуй ввести логин ещё раз"
         )
 
-def request_status_mess_7(message):
+def request_status_mess_7(id):
     bot.send_message(
         id,
-        tl_vl.request_status[7]
+        "Такого пароля быть не может. Начните авторизацию сначала /login"
         )
 
-def request_status_mess_9(message):
+def request_status_mess_9(id):
     bot.send_message(
         id,
-        tl_vl.request_status[9]
+        "Неполадки с ботом, обратить в поддержку"
         )
 
-def answer(message):
+def request_status_mess_10(id):
+    bot.send_message(
+        id,
+        "Превышнено количество раз неправильно веденного логина или пароля. Доступ к оповещениям - приостоновлен. Для возобновления досткупа напишите разработчику /write"
+        )
+
+def answer(message, id):
     bot.send_message(
         id,
         message
         )
-
-#bot.polling(none_stop=True)

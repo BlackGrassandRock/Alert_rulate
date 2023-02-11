@@ -1,19 +1,19 @@
 import pymysql
 
-import random
+#from src.tlrulate_request import *
+#from src.tlrulate_config import *
+from tlrulate_config import *
+users_data = ['3456']
 
-from src.tlrulate_request import *
-from src.tlrulate_config import *
+#testing module!!! checking for incorrect password entry
 
-
-#controler  upd_answ == None - new db record | else - update old db record
-def cheker(users_data):
-    upd_answ = answ_from_bd(users_data[0])
-    if upd_answ == None:
-        req_to_bd(users_data)
-        shed_for_upd(users_data[0])
+#password_n == None - ok | else - checking attempts of invalid entries
+def chkr_pas_from_tg(users_data):
+    password_n = pasw_from_bd(users_data[0])
+    if password_n == None or password_n != 0:
+        return "ok"
     else:
-        comparison_data(upd_answ, users_data)
+        request_status_mess_10(users_data[0])
 
 #writing id to the shedule list
 def shed_for_upd(tl_id):
@@ -46,7 +46,7 @@ def req_to_bd(users_data):
         request_status_mess_9(users_data[0])
 
 #Receiving data from a database
-def answ_from_bd(id_usr):
+def pasw_from_bd(id_usr):
     id_usr = str(id_usr)
     try:
         list_of_user = []
@@ -56,11 +56,11 @@ def answ_from_bd(id_usr):
             password = DB_PASS,
             database = DB_BASE,
         ) as connection:
-            select_answer_query = "SELECT * from tlrulate WHERE (Id = "+ id_usr +")"
+            select_answer_query = "SELECT Attempts from nm_of_attempts WHERE (Id = "+ id_usr +")"
             with connection.cursor() as cursor:
                 cursor.execute(select_answer_query)
                 for i in cursor.fetchone():
-                    list_of_user.append(i)
+                    list_of_user = i
     except Exception:
         list_of_user = None
     return list_of_user
@@ -90,3 +90,6 @@ def update_data(sorted_all_data):
     val_tuple = (sorted_all_data[1], sorted_all_data[2], sorted_all_data[3], sorted_all_data[4], sorted_all_data[5], sorted_all_data[6], sorted_all_data[7], sorted_all_data[8], sorted_all_data[9], sorted_all_data[10], sorted_all_data[11], sorted_all_data[12], sorted_all_data[13], sorted_all_data[14], sorted_all_data[15], sorted_all_data[16], sorted_all_data[17], sorted_all_data[18], sorted_all_data[19], sorted_all_data[20], sorted_all_data[21], sorted_all_data[22], sorted_all_data[23], sorted_all_data[0])
     mycursor.execute(update_query, val_tuple)
     mydb.commit()
+
+
+chkr_pas_from_tg(users_data)
