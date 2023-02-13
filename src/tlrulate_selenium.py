@@ -2,19 +2,20 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-from src.tlrulate_request import *
+from src.tl_tg_request import *
+from src.tl_db_lg_pas import *
 
 def parser(users_data):
     chg_usr_dt = []
-    bounce = True
+    skip = True
 
-    if bounce == True: #Allows to display one error message
+    if skip == True: #Allows to display one error message
         try:
             #options
             options = webdriver.ChromeOptions()
 
             #parser background mode!!!
-            #options.headless = True
+            options.headless = True
 
             #open the site
             driver = webdriver.Chrome(options = options)
@@ -22,9 +23,9 @@ def parser(users_data):
             assert "Tl.Rulate.ru" in driver.title
         except Exception:
             request_status_mess_2(users_data[0])
-            bounce = False
+            skip = False
 
-    if bounce == True:
+    if skip == True:
         try:
             #enter login
             elem = driver.find_element(By.NAME, "login[login]")
@@ -38,17 +39,18 @@ def parser(users_data):
             assert "Tl.Rulate.ru" in driver.title
         except Exception:
             request_status_mess_3(users_data[0])
-            bounce = False
+            skip = False
 
-    if bounce == True:
+    if skip == True:
         try:
             elem = driver.find_element(By.PARTIAL_LINK_TEXT, 'Оповеще')
             elem.click()
         except Exception:
             request_status_mess_4(users_data[0])
-            bounce = False
+            edit_nmb_of_lg_attmp(users_data[0])
+            skip = False
 
-    if bounce == True:
+    if skip == True:
         try:
             elem = driver.find_element(By.ID, "Notices")
             alert = elem.find_elements(By.TAG_NAME, 'p')
@@ -59,7 +61,7 @@ def parser(users_data):
             return users_data
         except Exception:
             request_status_mess_5(users_data[0])
-            bounce = False
+            skip = False
 
     driver.close()
     driver.quit()

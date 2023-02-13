@@ -1,4 +1,4 @@
-from src.tlrulate_request import *
+from src.tl_tg_request import *
 
 
 #Permissible symbols (ASCI codes)
