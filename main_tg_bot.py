@@ -3,7 +3,7 @@ import pytz
 
 from src.tlrulate_validator import *
 from src.tl_config import * #secure data
-from src.tlrulate_selenium import parser
+from src.request import parser
 from src.tl_db_new_data import *
 from src.tl_db_lg_pas import *
 

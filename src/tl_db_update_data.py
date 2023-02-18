@@ -2,7 +2,7 @@ import pymysql
 
 from src.tl_tg_request import *
 from src.tl_config import *
-from src.tlrulate_selenium import *
+from src.request import *
 
 
 def controler(users_data):
