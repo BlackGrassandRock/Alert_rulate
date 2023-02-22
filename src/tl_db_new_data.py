@@ -7,7 +7,7 @@ from src.tl_config import *
 
 
 #controler  upd_answ == None - new db record | else - update old db record
-def cheker(users_data):
+def cheker(users_data):s
     upd_answ = answ_from_bd(users_data[0])
     if upd_answ == None:
         req_to_bd(users_data)
